@@ -4,7 +4,6 @@
 
 ## 🚀 لائیو لنک
 آپ اس ایپ کو یہاں دیکھ سکتے ہیں:
-[https://ranag786tech-lang.github.io/the-light/](https://ranag786tech-lang.github.io/the-light/)
 
 ## 🌟 نمایاں خصوصیات (Features)
 * **99 Names of Allah:** ترجمہ، قرآنی حوالہ اور معاشی اصولوں کے ساتھ۔
