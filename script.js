@@ -2,106 +2,210 @@ let countValue = 0;
 let currentIndex = 0;
 let namesData = [];
 
-// 1. ڈیٹا لوڈ کرنے کا فنکشن (Fixed: 'asynchronous' کو 'async' کر دیا)
+const elements = {
+    name: document.getElementById("divine-name"),
+    meaning: document.getElementById("meaning"),
+    verse: document.getElementById("quran-verse"),
+    rule: document.getElementById("economic-rule"),
+    counter: document.getElementById("counter-btn"),
+    next: document.getElementById("next-btn"),
+    prev: document.getElementById("prev-btn"),
+    glow: document.getElementById("magnetic-glow")
+};
+
+document.addEventListener("DOMContentLoaded", initApp);
+
+async function initApp() {
+    attachEvents();
+    await loadData();
+}
+
 async function loadData() {
     try {
-        const response = await fetch('data.json');
+        const response = await fetch("data.json");
+        if (!response.ok) throw new Error("Network response failed");
         namesData = await response.json();
         updateDisplay(0);
     } catch (error) {
-        console.error("ڈیٹا لوڈ نہیں ہو سکا", error);
+        console.error("ڈیٹا لوڈ نہیں ہو سکا:", error);
+        elements.meaning.innerText = "ڈیٹا لوڈ کرنے میں مسئلہ پیش آیا";
     }
 }
 
-// 2. تسبیح گننے اور ویژول ایفیکٹ کا فنکشن
-function count(event) {
-    countValue++;
-    document.getElementById('counter-btn').innerText = countValue;
+function attachEvents() {
+    elements.counter.addEventListener("click", handleCount);
+    elements.next.addEventListener("click", nextName);
+    elements.prev.addEventListener("click", prevName);
 
-    // وائبریشن 33 پر
-    if(countValue % 33 === 0 && navigator.vibrate) {
+    window.addEventListener("mousemove", moveGlow);
+    window.addEventListener("touchmove", moveGlow);
+}
+
+function handleCount(event) {
+    countValue++;
+    elements.counter.innerText = countValue;
+
+    if (countValue % 33 === 0 && navigator.vibrate) {
         navigator.vibrate(200);
     }
 
-    // یہاں سے ویژول ایفیکٹ شروع ہوتا ہے
     triggerEffect(event);
 }
 
-// 3. ویژول ایفیکٹ (نام کا اوپر اڑنا)
 function triggerEffect(event) {
-    const currentText = document.getElementById('divine-name').innerText;
-    const floatText = document.createElement('div');
-    floatText.className = 'dhikr-effect';
-    floatText.innerText = currentText;
+    const floatText = document.createElement("div");
+    floatText.className = "dhikr-effect";
+    floatText.innerText = elements.name.innerText;
 
-    // کلک کی پوزیشن (موبائل ٹچ یا ماؤس کلک)
     const x = event.clientX || (event.touches ? event.touches[0].clientX : window.innerWidth / 2);
     const y = event.clientY || (event.touches ? event.touches[0].clientY : window.innerHeight / 2);
 
-    floatText.style.left = x + 'px';
-    floatText.style.top = y + 'px';
+    floatText.style.left = x + "px";
+    floatText.style.top = y + "px";
 
     document.body.appendChild(floatText);
 
-    setTimeout(() => {
-        floatText.remove();
-    }, 1500);
+    setTimeout(() => floatText.remove(), 1500);
 }
 
-// 4. اگلے نام پر جانے کا فنکشن
 function nextName() {
-    if (namesData.length === 0) return;
-    
-    // تسبیح ری سیٹ کریں
+    if (!namesData.length) return;
     resetCounter();
-
-    currentIndex++;
-    if (currentIndex >= namesData.length) {
-        currentIndex = 0; 
-    }
+    currentIndex = (currentIndex + 1) % namesData.length;
     updateDisplay(currentIndex);
 }
 
-// 5. پچھلے نام پر واپس جانے کا فنکشن
 function prevName() {
-    if (namesData.length === 0) return;
-
-    // تسبیح ری سیٹ کریں
+    if (!namesData.length) return;
     resetCounter();
-
-    currentIndex--;
-    if (currentIndex < 0) {
-        currentIndex = namesData.length - 1; 
-    }
+    currentIndex = (currentIndex - 1 + namesData.length) % namesData.length;
     updateDisplay(currentIndex);
 }
 
-// کاؤنٹر کو زیرو کرنے کا مشترکہ فنکشن
 function resetCounter() {
     countValue = 0;
-    document.getElementById('counter-btn').innerText = countValue;
+    elements.counter.innerText = countValue;
 }
-// 5. ڈسپلے اپ ڈیٹ کرنے کا فنکشن (Fixed: فالتو ڈاٹ ہٹا دیا)
+
 function updateDisplay(index) {
     const item = namesData[index];
-    if(item) {
-        document.getElementById('divine-name').innerText = item.name;
-        document.getElementById('meaning').innerText = item.meaning;
-        document.getElementById('quran-verse').innerText = item.verse;
-        document.getElementById('economic-rule').innerText = "اصول: " + item.principle;
+    if (!item) return;
+
+    elements.name.innerText = item.name;
+    elements.meaning.innerText = item.meaning;
+    elements.verse.innerText = item.verse;
+    elements.rule.innerText = "اصول: " + item.principle;
+}
+
+function moveGlow(e) {
+    const x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+    const y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+
+    elements.glow.style.left = x + "px";
+    elements.glow.style.top = y + "px";
+}let countValue = 0;
+let currentIndex = 0;
+let namesData = [];
+
+const elements = {
+    name: document.getElementById("divine-name"),
+    meaning: document.getElementById("meaning"),
+    verse: document.getElementById("quran-verse"),
+    rule: document.getElementById("economic-rule"),
+    counter: document.getElementById("counter-btn"),
+    next: document.getElementById("next-btn"),
+    prev: document.getElementById("prev-btn"),
+    glow: document.getElementById("magnetic-glow")
+};
+
+document.addEventListener("DOMContentLoaded", initApp);
+
+async function initApp() {
+    attachEvents();
+    await loadData();
+}
+
+async function loadData() {
+    try {
+        const response = await fetch("data.json");
+        if (!response.ok) throw new Error("Network response failed");
+        namesData = await response.json();
+        updateDisplay(0);
+    } catch (error) {
+        console.error("ڈیٹا لوڈ نہیں ہو سکا:", error);
+        elements.meaning.innerText = "ڈیٹا لوڈ کرنے میں مسئلہ پیش آیا";
     }
 }
 
-window.onload = loadData;
-const glow = document.getElementById('magnetic-glow');
+function attachEvents() {
+    elements.counter.addEventListener("click", handleCount);
+    elements.next.addEventListener("click", nextName);
+    elements.prev.addEventListener("click", prevName);
 
-const moveGlow = (e) => {
+    window.addEventListener("mousemove", moveGlow);
+    window.addEventListener("touchmove", moveGlow);
+}
+
+function handleCount(event) {
+    countValue++;
+    elements.counter.innerText = countValue;
+
+    if (countValue % 33 === 0 && navigator.vibrate) {
+        navigator.vibrate(200);
+    }
+
+    triggerEffect(event);
+}
+
+function triggerEffect(event) {
+    const floatText = document.createElement("div");
+    floatText.className = "dhikr-effect";
+    floatText.innerText = elements.name.innerText;
+
+    const x = event.clientX || (event.touches ? event.touches[0].clientX : window.innerWidth / 2);
+    const y = event.clientY || (event.touches ? event.touches[0].clientY : window.innerHeight / 2);
+
+    floatText.style.left = x + "px";
+    floatText.style.top = y + "px";
+
+    document.body.appendChild(floatText);
+
+    setTimeout(() => floatText.remove(), 1500);
+}
+
+function nextName() {
+    if (!namesData.length) return;
+    resetCounter();
+    currentIndex = (currentIndex + 1) % namesData.length;
+    updateDisplay(currentIndex);
+}
+
+function prevName() {
+    if (!namesData.length) return;
+    resetCounter();
+    currentIndex = (currentIndex - 1 + namesData.length) % namesData.length;
+    updateDisplay(currentIndex);
+}
+
+function resetCounter() {
+    countValue = 0;
+    elements.counter.innerText = countValue;
+}
+
+function updateDisplay(index) {
+    const item = namesData[index];
+    if (!item) return;
+
+    elements.name.innerText = item.name;
+    elements.meaning.innerText = item.meaning;
+    elements.verse.innerText = item.verse;
+    elements.rule.innerText = "اصول: " + item.principle;
+}
+
+function moveGlow(e) {
     const x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
     const y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-    
-    glow.style.left = x + 'px';
-    glow.style.top = y + 'px';
-};
 
-window.addEventListener('mousemove', moveGlow);
-window.addEventListener('touchmove', moveGlow);
+    elements.glow.style.left = x + "px";
+    elements.glow.style.top = y + "px";
+}
