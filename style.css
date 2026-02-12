@@ -38,21 +38,24 @@ body {
     transition: 0.1s;
 }
 .navigation-area {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* دونوں ایروز کے درمیان فاصلہ */
     margin-top: 20px;
 }
 
-#next-btn {
+#next-btn, #prev-btn {
     background: transparent;
     border: 1px solid #f1d279;
     color: #f1d279;
-    padding: 10px 25px;
-    border-radius: 20px;
+    padding: 10px 20px;
+    border-radius: 50%; /* گول بٹن ایروز کے لیے بہتر لگتے ہیں */
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
     transition: 0.3s;
 }
 
-#next-btn:hover {
+#next-btn:hover, #prev-btn:hover {
     background: #f1d279;
     color: #002b1b;
 }
