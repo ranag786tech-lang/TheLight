@@ -52,6 +52,9 @@ function triggerEffect(event) {
 function nextName() {
     if (namesData.length === 0) return;
     
+    // تسبیح ری سیٹ کریں
+    resetCounter();
+
     currentIndex++;
     if (currentIndex >= namesData.length) {
         currentIndex = 0; 
@@ -59,6 +62,25 @@ function nextName() {
     updateDisplay(currentIndex);
 }
 
+// 5. پچھلے نام پر واپس جانے کا فنکشن
+function prevName() {
+    if (namesData.length === 0) return;
+
+    // تسبیح ری سیٹ کریں
+    resetCounter();
+
+    currentIndex--;
+    if (currentIndex < 0) {
+        currentIndex = namesData.length - 1; 
+    }
+    updateDisplay(currentIndex);
+}
+
+// کاؤنٹر کو زیرو کرنے کا مشترکہ فنکشن
+function resetCounter() {
+    countValue = 0;
+    document.getElementById('counter-btn').innerText = countValue;
+}
 // 5. ڈسپلے اپ ڈیٹ کرنے کا فنکشن (Fixed: فالتو ڈاٹ ہٹا دیا)
 function updateDisplay(index) {
     const item = namesData[index];
