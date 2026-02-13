@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <div id="splash-screen">
+        <div class="loader-content">
+            <h1 class="loader-logo">النور</h1>
+            <div class="light-pulse"></div>
+            <p style="color: #f1d279; margin-top: 20px;">نور کی تلاش جاری ہے...</p>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <h1>النور</h1>
@@ -21,17 +30,23 @@
             </div>
             <p id="economic-rule" class="rule-box"></p>
         </div>
-<div class="navigation-area">
-    <button id="next-btn" onclick="nextName()">اگلا نام ➔</button>
-</div>
+
+        <div class="navigation-area">
+            <button id="prev-btn" onclick="prevName()">&#10094;</button> 
+            <button id="next-btn" onclick="nextName()">&#10095;</button>
+        </div>
+
         <div class="action-area">
-                       
-           <button id="counter-btn" onclick="count(event);
-            triggerEffect(event)">0</button>
+            <button id="counter-btn" onclick="count(event)">0</button>
             <p>ذکرِ قلب جاری رکھیں</p>
         </div>
     </div>
+
+    <div id="magnetic-glow"></div>
+
+    <audio id="click-sound" src="https://www.soundjay.com/buttons/button-16.mp3"></audio>
+    <audio id="bell-sound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
     <script src="script.js"></script>
 </body>
-<div id="magnetic-glow"></div>
 </html>
