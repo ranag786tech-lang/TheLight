@@ -2,25 +2,25 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent; /* Blue box khatam */
+    -webkit-tap-highlight-color: transparent; /* نیلا ڈبہ ختم */
 }
 
 body {
     background-color: #002b1b;
     color: #f1d279;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
     text-align: center;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow-x: hidden;
+    overflow: hidden; /* اسکرولنگ کا مسئلہ ختم */
     user-select: none;
 }
 
 .container {
-    width: 90%;
-    max-width: 400px; /* Mobile par fit rahega aur PC par behtareen */
+    width: 100%;
+    max-width: 450px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -30,65 +30,78 @@ body {
     border-radius: 25px;
     padding: 25px;
     background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
     margin-bottom: 20px;
-    min-height: 250px;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-#divine-name { font-size: 2.5rem; margin-bottom: 10px; }
-#meaning { font-size: 1.2rem; opacity: 0.9; margin-bottom: 15px; }
-
-.verse-box { font-size: 0.9rem; font-style: italic; line-height: 1.5; margin-bottom: 10px; }
-.rule-box { font-weight: bold; font-size: 0.85rem; border-top: 1px solid rgba(241, 210, 121, 0.3); padding-top: 10px; }
+#divine-name { font-size: 2.8rem; margin-bottom: 10px; text-shadow: 0 0 15px rgba(241, 210, 121, 0.3); }
+#meaning { font-size: 1.3rem; margin-bottom: 15px; font-weight: 300; }
+.verse-box { font-size: 1rem; line-height: 1.6; margin-bottom: 12px; min-height: 50px; }
+.rule-box { font-size: 0.9rem; border-top: 1px solid rgba(241, 210, 121, 0.2); padding-top: 10px; color: #fff; }
 
 .navigation-area {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    padding: 0 40px;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 25px;
 }
 
 #next-btn, #prev-btn {
     background: transparent;
     border: 2px solid #f1d279;
     color: #f1d279;
-    width: 55px;
-    height: 55px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     font-size: 1.5rem;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 #counter-btn {
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    border: 5px solid #f1d279;
+    border: 6px solid #f1d279;
     background: transparent;
     color: white;
-    font-size: 3rem;
+    font-size: 3.5rem;
     cursor: pointer;
-    box-shadow: 0 0 20px rgba(241, 210, 121, 0.2);
+    box-shadow: 0 0 25px rgba(241, 210, 121, 0.2);
     transition: transform 0.1s;
 }
 
-#counter-btn:active { transform: scale(0.95); }
+#counter-btn:active { transform: scale(0.92); }
 
-/* Splash & Effects (Wahi purane wale) */
+/* اسپلش اسکرین اینیمیشن */
 #splash-screen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: #002b1b; display: flex; justify-content: center; align-items: center; z-index: 9999;
+    background: #002b1b; display: flex; justify-content: center; align-items: center; z-index: 10000;
 }
-.fade-out { opacity: 0; pointer-events: none; transition: 1s; }
+
+.loader-logo { font-size: 5rem; color: #f1d279; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
+.fade-out { opacity: 0; pointer-events: none; transition: 1.5s ease; }
+
+/* ذکر ایفیکٹ */
 .dhikr-effect {
-    position: fixed; pointer-events: none; font-size: 2rem; font-weight: bold;
-    color: #f1d279; animation: floatUp 1.5s forwards; z-index: 1000;
+    position: fixed; pointer-events: none; font-size: 2.2rem; font-weight: bold;
+    color: #f1d279; z-index: 999; animation: floatUp 1.5s forwards;
 }
+
 @keyframes floatUp {
     0% { transform: translate(-50%, 0); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translate(-50%, -200px); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translate(-50%, -250px); opacity: 0; }
+}
+
+#magnetic-glow {
+    position: fixed; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(241, 210, 121, 0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: -1; transform: translate(-50%, -50%);
 }
