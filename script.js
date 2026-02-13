@@ -2,29 +2,42 @@ let countValue = 0;
 let currentIndex = 0;
 let namesData = [];
 
-// Sound ko pehle se load karne ke liye
+// ساؤنڈز کو محفوظ طریقے سے لوڈ کرنا
 const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
 const bellSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
 
-// Mobile sound fix: Browsers ko "user interaction" chahiye hota hai
-function count(event) {
-    // Ye line browser ko signal deti hai ke user ne sound ki ijazat de di hai
+// آواز کو موبائل پر "ان لاک" کرنے کے لیے
+function unlockAudio() {
     clickSound.play().then(() => {
-        clickSound.pause(); // Sirf "unlock" karne ke liye
+        clickSound.pause();
         clickSound.currentTime = 0;
-    }).catch(e => console.log("Sound unlock error"));
+    }).catch(e => console.log("Audio unlock required"));
+    window.removeEventListener('click', unlockAudio);
+}
+window.addEventListener('click', unlockAudio);
 
+async function loadData() {
+    try {
+        const response = await fetch('data.json');
+        if (!response.ok) throw new Error("Data not found");
+        namesData = await response.json();
+        updateDisplay(0);
+    } catch (error) {
+        console.error("Load failed:", error);
+    }
+}
+
+function count(event) {
     countValue++;
     document.getElementById('counter-btn').innerText = countValue;
 
-    // Ab sound play karein
-    clickSound.currentTime = 0; 
-    clickSound.play();
+    // آواز چلائیں
+    clickSound.currentTime = 0;
+    clickSound.play().catch(e => console.log("Sound error"));
 
     if (countValue % 33 === 0) {
-        bellSound.currentTime = 0;
         bellSound.play();
-        if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
     }
     triggerEffect(event);
 }
@@ -34,8 +47,8 @@ function triggerEffect(event) {
     effect.className = 'dhikr-effect';
     effect.innerText = document.getElementById('divine-name').innerText;
     
-    let x = event.clientX || (event.touches ? event.touches[0].clientX : window.innerWidth/2);
-    let y = event.clientY || (event.touches ? event.touches[0].clientY : window.innerHeight/2);
+    let x = event.clientX || (event.touches ? event.touches[0].clientX : window.innerWidth / 2);
+    let y = event.clientY || (event.touches ? event.touches[0].clientY : window.innerHeight / 2);
     
     effect.style.left = x + 'px';
     effect.style.top = y + 'px';
@@ -53,12 +66,32 @@ function updateDisplay(index) {
     }
 }
 
-function nextName() { currentIndex = (currentIndex + 1) % namesData.length; resetCounter(); updateDisplay(currentIndex); }
-function prevName() { currentIndex = (currentIndex - 1 + namesData.length) % namesData.length; resetCounter(); updateDisplay(currentIndex); }
-function resetCounter() { countValue = 0; document.getElementById('counter-btn').innerText = 0; }
+function nextName() { 
+    currentIndex = (currentIndex + 1) % namesData.length; 
+    resetCounter(); 
+    updateDisplay(currentIndex); 
+}
 
-window.addEventListener('load', () => {
-    loadData();
+function prevName() { 
+    currentIndex = (currentIndex - 1 + namesData.length) % namesData.length; 
+    resetCounter(); 
+    updateDisplay(currentIndex); 
+}
+
+function resetCounter() { 
+    countValue = 0; 
+    document.getElementById('counter-btn').innerText = 0; 
+}
+
+// ماؤس گلوبل موومنٹ
+window.addEventListener('mousemove', (e) => {
+    const glow = document.getElementById('magnetic-glow');
+    if(glow) { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; }
+});
+
+// لوڈنگ اسکرین ختم کرنا
+window.addEventListener('load', async () => {
+    await loadData();
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if(splash) splash.classList.add('fade-out');
