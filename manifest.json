@@ -1,0 +1,16 @@
+{
+  "name": "Al-Noor - النور",
+  "short_name": "Al-Noor",
+  "description": "99 Names of Allah with Meanings and Verses",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#002b1b",
+  "theme_color": "#f1d279",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
