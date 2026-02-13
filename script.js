@@ -2,84 +2,65 @@ let countValue = 0;
 let currentIndex = 0;
 let namesData = [];
 
-// 1. ڈیٹا لوڈ کرنے کا فنکشن (Fixed: 'asynchronous' کو 'async' کر دیا)
-async function loadData() {
-    try {
-        const response = await fetch('data.json');
-        namesData = await response.json();
-        updateDisplay(0);
-    } catch (error) {
-        console.error("ڈیٹا لوڈ نہیں ہو سکا", error);
-    }
-}
+// Sound ko pehle se load karne ke liye
+const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+const bellSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
 
-// 2. تسبیح گننے اور ویژول ایفیکٹ کا فنکشن
+// Mobile sound fix: Browsers ko "user interaction" chahiye hota hai
 function count(event) {
+    // Ye line browser ko signal deti hai ke user ne sound ki ijazat de di hai
+    clickSound.play().then(() => {
+        clickSound.pause(); // Sirf "unlock" karne ke liye
+        clickSound.currentTime = 0;
+    }).catch(e => console.log("Sound unlock error"));
+
     countValue++;
     document.getElementById('counter-btn').innerText = countValue;
 
-    // وائبریشن 33 پر
-    if(countValue % 33 === 0 && navigator.vibrate) {
-        navigator.vibrate(200);
-    }
+    // Ab sound play karein
+    clickSound.currentTime = 0; 
+    clickSound.play();
 
-    // یہاں سے ویژول ایفیکٹ شروع ہوتا ہے
+    if (countValue % 33 === 0) {
+        bellSound.currentTime = 0;
+        bellSound.play();
+        if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+    }
     triggerEffect(event);
 }
 
-// 3. ویژول ایفیکٹ (نام کا اوپر اڑنا)
 function triggerEffect(event) {
-    const currentText = document.getElementById('divine-name').innerText;
-    const floatText = document.createElement('div');
-    floatText.className = 'dhikr-effect';
-    floatText.innerText = currentText;
-
-    // کلک کی پوزیشن (موبائل ٹچ یا ماؤس کلک)
-    const x = event.clientX || (event.touches ? event.touches[0].clientX : window.innerWidth / 2);
-    const y = event.clientY || (event.touches ? event.touches[0].clientY : window.innerHeight / 2);
-
-    floatText.style.left = x + 'px';
-    floatText.style.top = y + 'px';
-
-    document.body.appendChild(floatText);
-
-    setTimeout(() => {
-        floatText.remove();
-    }, 1500);
-}
-
-// 4. اگلے نام پر جانے کا فنکشن
-function nextName() {
-    if (namesData.length === 0) return;
+    const effect = document.createElement('div');
+    effect.className = 'dhikr-effect';
+    effect.innerText = document.getElementById('divine-name').innerText;
     
-    currentIndex++;
-    if (currentIndex >= namesData.length) {
-        currentIndex = 0; 
-    }
-    updateDisplay(currentIndex);
+    let x = event.clientX || (event.touches ? event.touches[0].clientX : window.innerWidth/2);
+    let y = event.clientY || (event.touches ? event.touches[0].clientY : window.innerHeight/2);
+    
+    effect.style.left = x + 'px';
+    effect.style.top = y + 'px';
+    document.body.appendChild(effect);
+    setTimeout(() => effect.remove(), 1500);
 }
 
-// 5. ڈسپلے اپ ڈیٹ کرنے کا فنکشن (Fixed: فالتو ڈاٹ ہٹا دیا)
 function updateDisplay(index) {
     const item = namesData[index];
-    if(item) {
+    if (item) {
         document.getElementById('divine-name').innerText = item.name;
         document.getElementById('meaning').innerText = item.meaning;
-        document.getElementById('quran-verse').innerText = item.verse;
-        document.getElementById('economic-rule').innerText = "اصول: " + item.principle;
+        document.getElementById('quran-verse').innerText = item.verse || "";
+        document.getElementById('economic-rule').innerText = item.principle ? "اصول: " + item.principle : "";
     }
 }
 
-window.onload = loadData;
-const glow = document.getElementById('magnetic-glow');
+function nextName() { currentIndex = (currentIndex + 1) % namesData.length; resetCounter(); updateDisplay(currentIndex); }
+function prevName() { currentIndex = (currentIndex - 1 + namesData.length) % namesData.length; resetCounter(); updateDisplay(currentIndex); }
+function resetCounter() { countValue = 0; document.getElementById('counter-btn').innerText = 0; }
 
-const moveGlow = (e) => {
-    const x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-    const y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-    
-    glow.style.left = x + 'px';
-    glow.style.top = y + 'px';
-};
-
-window.addEventListener('mousemove', moveGlow);
-window.addEventListener('touchmove', moveGlow);
+window.addEventListener('load', () => {
+    loadData();
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if(splash) splash.classList.add('fade-out');
+    }, 2500);
+});
