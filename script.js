@@ -97,3 +97,8 @@ window.addEventListener('load', async () => {
         if(splash) splash.classList.add('fade-out');
     }, 2500);
 });
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log("PWA Active"))
+    .catch(err => console.log("PWA Error", err));
+}
